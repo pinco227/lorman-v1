@@ -1,4 +1,4 @@
-[![Screenshot](https://github.com/pinco227/lorman-v1/blob/main/images/screenshot.png)](https://lorman-v1.herokuapp.com/)
+[![Screenshot](https://github.com/pinco227/lorman-v1/blob/main/images/screenshot.jpg)](https://lorman-v1.herokuapp.com/)
 # LorMan
 ## 2006
 ### HTML, CSS, PHP, MySQL, Photoshop
