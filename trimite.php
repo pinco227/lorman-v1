@@ -17,7 +17,7 @@ if ($_POST['nume'] != '') {
 		echo '</font></center>';
 	} else {
 
-		$table = getenv('REMOTE_ADDR');
+		$table = getUserIpAddr();
 		$table = str_replace('.', '_', $table);
 
 		$catre = 'p4ul.gg@gmail.com';
@@ -97,45 +97,50 @@ if ($_POST['nume'] != '') {
 
 		echo '<center><br><br><b><font color="green">Comanda a fost efectuata cu succes !<br>Veti fi contactat telefonic in maxim 24 de ore pentru confirmare !</font></b><br><br></center>';
 
-		$table = getenv('REMOTE_ADDR');
+		$table = getUserIpAddr();
 		$table = str_replace('.', '_', $table);
 		$stergeSQL = 'DROP TABLE `' . $table . '`;';
 		mysqli_query($conexiune, $stergeSQL);
 	}
 }
 
-$table = getenv('REMOTE_ADDR');
+$table = getUserIpAddr();
 $table = str_replace('.', '_', $table);
+$cerere = mysqli_query($conexiune, 'SELECT * FROM `' . $table . '`');
 
-$intrari_totale = mysqli_num_rows(mysqli_query($conexiune, 'SELECT * FROM `' . $table . '`'));
+if ($cerere) {
+	$intrari_totale = mysqli_num_rows($cerere);
 
-if ($intrari_totale == 0) {
-	echo '<br><center><font color="darkred"><b>Nu ai nici un produs in cos !</b></font></center>';
+	if ($intrari_totale == 0) {
+		echo '<br><center><font color="darkred"><b>Nu ai nici un produs in cos !</b></font></center>';
+	} else {
+		echo '
+		<form name="comanda" method="post" action="' . $_SERVER['PHP_SELF'] . '">
+		<table border="0" cellspacing="2" cellpadding="2" width="500" align="center">
+			<tr>
+				<td width="200" align="right">Nume :</td>
+				<td width="300" align="left"><input type="text" name="nume" size="25"></td>
+			</tr>
+			<tr>
+				<td width="200" align="right">Prenume :</td>
+				<td width="300" align="left"><input type="text" name="prenume" size="25"></td>
+			</tr>
+			<tr>
+				<td width="200" align="right">Nr. de telefon</td>
+				<td width="300" align="left"><input type="text" name="tel" size="25"></td>
+			</tr>
+			<tr>
+				<td width="200" align="right">Adresa :</td>
+				<td width="300" align="left"><textarea name="adresa" cols="19" rows="3"></textarea></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center"><input type="image" src="images/trimite.gif" name="comanda" value="Comanda!" style="width: 150px; height: 40px;"></td>
+			</tr>
+		</table>
+		</form>';
+	}
 } else {
-	echo '
-	<form name="comanda" method="post" action="' . $_SERVER['PHP_SELF'] . '">
-	<table border="0" cellspacing="2" cellpadding="2" width="500" align="center">
-		<tr>
-			<td width="200" align="right">Nume :</td>
-			<td width="300" align="left"><input type="text" name="nume" size="25"></td>
-		</tr>
-		<tr>
-			<td width="200" align="right">Prenume :</td>
-			<td width="300" align="left"><input type="text" name="prenume" size="25"></td>
-		</tr>
-		<tr>
-			<td width="200" align="right">Nr. de telefon</td>
-			<td width="300" align="left"><input type="text" name="tel" size="25"></td>
-		</tr>
-		<tr>
-			<td width="200" align="right">Adresa :</td>
-			<td width="300" align="left"><textarea name="adresa" cols="19" rows="3"></textarea></td>
-		</tr>
-		<tr>
-			<td colspan="2" align="center"><input type="image" src="images/trimite.gif" name="comanda" value="Comanda!" style="width: 150px; height: 40px;"></td>
-		</tr>
-	</table>
-	</form>';
+	echo '<br><center><font color="darkred"><b>Nu exista inca nici un produs adaugat in cos !</b></font></center>';
 }
 
 include('footer.php');

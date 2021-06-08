@@ -60,20 +60,27 @@
                       <?php
                       error_reporting(0);
 
-                      $table = getenv('REMOTE_ADDR');
+                      $table = getUserIpAddr();
                       $table = str_replace('.', '_', $table);
+                      $cerere = mysqli_query($conexiune, 'SELECT `id` FROM `' . $table . '`');
 
-                      $intrari_totale = mysqli_num_rows(mysqli_query($conexiune, 'SELECT `id` FROM `' . $table . '`'));
+                      if ($cerere) {
+                        $intrari_totale = mysqli_num_rows($cerere);
+                      } else {
+                        $intrari_totale = 0;
+                      }
                       if ($intrari_totale == 0) echo '<font color="white">0 produse</font>';
                       else echo '<font color="yellow">' . $intrari_totale . ' produs(e)</font>';
                       ?>
                       |
                       <?php
-                      $table = getenv('REMOTE_ADDR');
+
+                      $table = getUserIpAddr();
                       $table = str_replace('.', '_', $table);
 
-                      $cerereSUM = 'SELECT SUM(`pret`) FROM `' . $table . '`';
-                      $pret_total = mysqli_num_rows(mysqli_query($conexiune, $cerereSUM));
+                      $cerereSUM = mysqli_query($conexiune, 'SELECT SUM(`pret`) AS pret_total FROM `' . $table . '`');
+                      $randP = mysqli_fetch_object($cerereSUM);
+                      $pret_total = $randP->pret_total;
 
                       if ($pret_total == '') echo '<font color="white">0 RON / 0 &euro;</font>';
                       else {
