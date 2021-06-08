@@ -58,7 +58,6 @@
                     </table>
                     <div style="font-size:12px;">
                       <?php
-                      error_reporting(0);
 
                       $table = getUserIpAddr();
                       $table = str_replace('.', '_', $table);
@@ -66,26 +65,24 @@
 
                       if ($cerere) {
                         $intrari_totale = mysqli_num_rows($cerere);
+                        if ($intrari_totale == 0) echo '<font color="white">0 produse</font>';
+                        else {
+                          echo '<font color="yellow">' . $intrari_totale . ' produs(e)</font>';
+                          echo ' | ';
+                          $cerereSUM = mysqli_query($conexiune, 'SELECT SUM(`pret`) AS pret_total FROM `' . $table . '`');
+                          if ($cerereSUM) {
+                            $randP = mysqli_fetch_object($cerereSUM);
+                            $pret_total = $randP->pret_total;
+
+                            if ($pret_total == '') echo '<font color="white">0 RON / 0 &euro;</font>';
+                            else {
+                              $euro = round($pret_total / 3);
+                              echo '<font color="yellow">' . $pret_total . ' RON / ' . $euro . ' &euro;</font>';
+                            }
+                          }
+                        }
                       } else {
-                        $intrari_totale = 0;
-                      }
-                      if ($intrari_totale == 0) echo '<font color="white">0 produse</font>';
-                      else echo '<font color="yellow">' . $intrari_totale . ' produs(e)</font>';
-                      ?>
-                      |
-                      <?php
-
-                      $table = getUserIpAddr();
-                      $table = str_replace('.', '_', $table);
-
-                      $cerereSUM = mysqli_query($conexiune, 'SELECT SUM(`pret`) AS pret_total FROM `' . $table . '`');
-                      $randP = mysqli_fetch_object($cerereSUM);
-                      $pret_total = $randP->pret_total;
-
-                      if ($pret_total == '') echo '<font color="white">0 RON / 0 &euro;</font>';
-                      else {
-                        $euro = round($pret_total / 3);
-                        echo '<font color="yellow">' . $pret_total . ' RON / ' . $euro . ' &euro;</font>';
+                        echo '<font color="white">0 produse</font>';
                       }
                       ?>
                     </div>
