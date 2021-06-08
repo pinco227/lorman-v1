@@ -184,8 +184,7 @@
                         mysqli_query(
                           $conexiune,
                           'SELECT `id` FROM `produse` WHERE `cat`="Barbati" AND `subcat`="Haine lungi"'
-                        ),
-                        0
+                        )
                       );
                       $jackete2 = mysqli_num_rows(mysqli_query(
                         $conexiune,
